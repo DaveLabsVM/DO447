@@ -1,0 +1,10 @@
+---
+- hosts: media
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: uninstall apache
+      yum:
+        name: httpd
+        autoremove: yes
+        state: absent

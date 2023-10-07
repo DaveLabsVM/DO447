@@ -1,0 +1,12 @@
+---
+- hosts: media
+  tasks:
+    - name: get file
+      block:
+        - get_url:
+            url: "http://lab_ans3/index.html"
+            dest: "/tmp/index_file"
+      rescue:
+        - debug: msg="The file doesn't exists!"
+      always:
+        - debug: msg="Play done!"

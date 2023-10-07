@@ -1,0 +1,11 @@
+---
+- hosts: media
+  become: yes
+  tasks:
+    - name: create users
+      user:
+        name: "{{item}}"
+      with_items:
+        - Pedro
+        - Nilton
+        - Daevid

@@ -1,0 +1,12 @@
+---
+- hosts: media
+  gather_facts: yes
+
+  tasks:
+    - name: Recoger información sobre AppArmor
+      setup:
+      register: apparmor_info
+
+    - name: Definir variable con información de AppArmor
+      set_fact:
+        apparmor_profiles: "{{ apparmor_info.ansible_facts.apparmor_profiles }}"

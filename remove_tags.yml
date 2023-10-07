@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: unistall apache
+      yum:
+        name: httpd
+        autoremove: yes
+        state: absent
+
+    - name: unistall CSH
+      yum:
+        name: csh
+        autoremove: yes
+        state: absent
+
