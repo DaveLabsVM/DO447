@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+  - name: Install CSH on Red Hat servers.
+    yum: 
+      state: present
+      name: csh
+    when: ansible_facts['distribution'] == "CentOS"
+
+  - name: Install java on Debian servers
+    yum:
+      state: present
+      name: java-1.8.0-openjdk
+    when: ansible_facts['distribution'] == "Debian"

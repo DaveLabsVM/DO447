@@ -1,0 +1,9 @@
+---
+- hosts: media
+  gather_facts: false
+  become: yes
+  tasks:
+   - name: Remove file (delete file)
+     file: 
+      path: /var/www/html/index.html
+      state: absent

@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  tasks:
+  - name: Install CSH with tag "csh"
+    yum:
+      state: present
+      name: csh
+    tags: csh
+
+  - name: Install HTTPD with tag "httpd"
+    yum:
+      state: present
+      name: httpd
+    tags: httpd
