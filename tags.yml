@@ -1,0 +1,21 @@
+---
+- name: Instalar y configurar servidor de base de datos SQL
+  hosts: media
+  become: true
+  tags: 
+    - sql
+  tasks:
+    - name: Instalar servidor de base de datos SQL
+      yum:
+        name: mssql-server
+        state: present
+      tags:
+        - sql-install
+
+    - name: Iniciar servicio de base de datos SQL
+      systemd:
+        name: mssql-server.service
+        state: started
+        enabled: true
+      tags:
+        - sql-start
