@@ -1,0 +1,53 @@
+---
+- name: Mantenimiento del sistema
+  hosts: media
+  become: yes
+
+  tasks:
+    - name: Limpiar caché de paquetes (Debian/Ubuntu)
+      apt:
+        autoclean: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: Limpiar caché de paquetes (CentOS/RHEL)
+      yum:
+        name: "*"
+        state: clean expire-cache
+      when: ansible_os_family == 'RedHat'
+
+    - name: Limpiar paquetes no necesarios (Debian/Ubuntu)
+      apt:
+        autoremove: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: Limpiar paquetes no necesarios (CentOS/RHEL)
+      yum:
+        name: "*"
+        state: autoremove
+      when: ansible_os_family == 'RedHat'
+
+    - name: Obtener lista de sesiones
+      shell: w -h
+      register: user_sessions
+
+    - name: Filtrar sesiones inactivas
+      set_fact:
+        inactive_sessions: "{{ user_sessions.stdout_lines | select('search', 'old') | map('regex_replace', '^(\\S+)\\s.*$', '\\1') | list }}"
+
+    - name: Terminar sesiones inactivas
+      command: pkill -KILL -u "{{ item }}"
+      with_items: "{{ inactive_sessions }}"
+
+    - name: Limpiar logs antiguos
+      find:
+        paths: /var/log
+        patterns: '*.gz'
+        age: 7
+        recurse: yes
+      register: old_logs
+
+    - name: Eliminar logs antiguos
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ old_logs.files }}"
